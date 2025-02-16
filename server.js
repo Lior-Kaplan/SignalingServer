@@ -13,7 +13,7 @@ app.use(express.json());
 
 const PORT = 8080;
 
-let rooms = {}; // Store rooms and their participants
+let rooms = {}; // Store rooms and their participants web sockets
 
 const createRoomId = () => {
   let code = Math.random().toString(36).substring(2, 27);
@@ -31,10 +31,12 @@ wss.on("connection", (ws) => {
       const roomId = createRoomId();
       rooms[roomId] = [ws];
       ws.roomId = roomId;
+      console.log("Room created!!")
       ws.send(JSON.stringify({ type: "room-created", roomId }));
     }
 
     if (data.type === "join-room") {
+      
       const { roomId, username } = data;
       console.log(roomId, username);
       if (rooms[roomId]) {
